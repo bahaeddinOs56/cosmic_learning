@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String   @id @default(cuid())
+  username          String   @unique
+  email             String   @unique
+  hashedPassword    String
+  emailVerified     Boolean  @default(false)
+  verificationToken String?
+  avatar            String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  journey           Journey?
+}
+
+model Journey {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  language     String?
+  skillLevel   String?
+  learningPath String?
+  currentLevel Int      @default(1)
+  points       Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id])
+}

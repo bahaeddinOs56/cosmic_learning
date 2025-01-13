@@ -1,40 +1,26 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cosmic Learning
 
-## Getting Started
+## 🌌 Description
 
-First, run the development server:
+Cosmic Learning is a space-themed interactive coding education platform developed by Bahaeddine Mestini. This project aims to provide aspiring programmers with a personalized and engaging learning experience, guiding them through their coding journey with a unique cosmic twist.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Interactive language selection and skill assessment
+- Personalized learning paths
+- AI-powered problem generation (frontend prepared for future integration)
+- Immersive space-themed user interface
+- Responsive design for various devices
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🌟 Programming Languages
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The project currently utilizes the following programming languages:
 
-## Learn More
+- TypeScript: The primary language for developing the application logic and components.
+- JavaScript: Used in conjunction with TypeScript for certain functionalities.
+- HTML: Employed for structuring the web content.
+- CSS: Used alongside Tailwind CSS for styling and layout.
 
-To learn more about Next.js, take a look at the following resources:
+## 👨‍💻 Developer
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# cosmic_learning
->>>>>>> 740cb7f45203d7ba18ccce6b87c5de3fbf015d46
+Bahaeddine Mestini

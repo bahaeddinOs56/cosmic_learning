@@ -12,17 +12,6 @@ Cosmic Learning is a space-themed interactive coding education platform develope
 - Immersive space-themed user interface
 - Responsive design for various devices
 
-## 💻 Technologies Used
-
-- Next.js 14
-- React
-- TypeScript
-- JavaScript
-- HTML
-- CSS
-- Framer Motion
-- Tailwind CSS
-
 ## 🌟 Programming Languages
 
 The project currently utilizes the following programming languages:

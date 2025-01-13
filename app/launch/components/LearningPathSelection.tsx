@@ -20,9 +20,10 @@ const paths = [
 interface LearningPathSelectionProps {
   language: string | null;
   skillLevel: string | null;
+  theme: 'violet' | 'green' | 'red' | 'yellow';
 }
 
-export default function LearningPathSelection({ language, skillLevel }: LearningPathSelectionProps) {
+export default function LearningPathSelection({ language, skillLevel, theme }: LearningPathSelectionProps) {
   const [selectedPath, setSelectedPath] = useState<string | null>(null)
 
   return (
@@ -44,7 +45,12 @@ export default function LearningPathSelection({ language, skillLevel }: Learning
             key={path.name}
             onClick={() => setSelectedPath(path.name)}
             className={`w-full p-4 rounded-lg transition-colors text-left flex items-start ${
-              selectedPath === path.name ? 'bg-blue-600 text-white' : 'bg-white/20 hover:bg-white/30'
+              selectedPath === path.name
+                ? theme === 'violet' ? 'bg-purple-600 text-white' :
+                  theme === 'green' ? 'bg-green-600 text-white' :
+                  theme === 'red' ? 'bg-red-600 text-white' :
+                  'bg-yellow-600 text-white'
+                : 'bg-white/20 hover:bg-white/30'
             }`}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
@@ -60,8 +66,13 @@ export default function LearningPathSelection({ language, skillLevel }: Learning
       <div className="flex justify-center mt-8">
         <Link href="/problem-solving-grid">
           <motion.button
-            className="px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full font-bold text-lg shadow-lg"
-            whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(159, 122, 234, 0.5)' }}
+            className={`px-8 py-3 rounded-full font-bold text-lg shadow-lg ${
+              theme === 'violet' ? 'bg-gradient-to-r from-purple-500 to-indigo-600' :
+              theme === 'green' ? 'bg-gradient-to-r from-green-500 to-emerald-600' :
+              theme === 'red' ? 'bg-gradient-to-r from-red-500 to-rose-600' :
+              'bg-gradient-to-r from-yellow-500 to-amber-600'
+            } text-white`}
+            whileHover={{ scale: 1.05, boxShadow: '0 0 15px rgba(255, 255, 255, 0.3)' }}
             whileTap={{ scale: 0.95 }}
             disabled={!selectedPath}
           >

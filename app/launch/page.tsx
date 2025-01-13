@@ -6,6 +6,8 @@ import LanguageSelection from '@/app/launch/components/LanguageSelection'
 import SkillAssessment from '@/app/launch/components/SkillAssessment'
 import LearningPathSelection from '@/app/launch/components/LearningPathSelection'
 import AIChatbot from '@/app/launch/components/AIChatbot'
+import { GalaxyOrbThemeSelector } from '@/app/components/GalaxyOrbThemeSelector'
+import { useTheme } from '../contexts/ThemeContext'
 
 const sections = ['Welcome', 'Language', 'Skill', 'Path']
 
@@ -15,6 +17,7 @@ interface ProgressIndicatorProps {
 }
 
 export default function LaunchJourney() {
+  const { theme } = useTheme()
   const [currentSection, setCurrentSection] = useState(0)
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null)
   const [skillLevel, setSkillLevel] = useState<string | null>(null)
@@ -50,18 +53,24 @@ export default function LaunchJourney() {
       case 0:
         return <WelcomeSection />;
       case 1:
-        return <LanguageSelection onSelectLanguage={handleLanguageSelection} />;
+        return <LanguageSelection onSelectLanguage={handleLanguageSelection} theme={theme} />;
       case 2:
         return <SkillAssessment onComplete={handleSkillAssessment} />;
       case 3:
-        return <LearningPathSelection language={selectedLanguage} skillLevel={skillLevel} />;
+        return <LearningPathSelection language={selectedLanguage} skillLevel={skillLevel} theme={theme} />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-blue-900 via-purple-900 to-black">
+    <div className={`relative min-h-screen overflow-hidden bg-gradient-to-b ${
+      theme === 'violet' ? 'from-indigo-600 via-purple-700 to-purple-900' :
+      theme === 'green' ? 'from-green-600 via-emerald-700 to-emerald-900' :
+      theme === 'red' ? 'from-red-600 via-rose-700 to-rose-900' :
+      'from-yellow-600 via-amber-700 to-amber-900'
+    }`}>
+      <GalaxyOrbThemeSelector />
       <div className="absolute inset-0 z-0">
         <StarField />
         <div className="absolute inset-0 bg-gradient-radial from-purple-500/20 via-transparent to-transparent" />
@@ -93,15 +102,25 @@ export default function LaunchJourney() {
             <button
               onClick={prevSection}
               disabled={currentSection === 0}
-              className="px-6 py-2 bg-blue-600 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed ${
+                theme === 'violet' ? 'bg-purple-600 hover:bg-purple-700' :
+                theme === 'green' ? 'bg-green-600 hover:bg-green-700' :
+                theme === 'red' ? 'bg-red-600 hover:bg-red-700' :
+                'bg-yellow-600 hover:bg-yellow-700'
+              } text-white transition-colors duration-200`}
             >
               Back
             </button>
-            {currentSection !== 2 && ( // Hide "Next" button during Skill Assessment
+            {currentSection !== 2 && currentSection !== 3 && (
               <button
                 onClick={nextSection}
                 disabled={currentSection === sections.length - 1}
-                className="px-6 py-2 bg-blue-600 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+                className={`px-6 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed ${
+                  theme === 'violet' ? 'bg-purple-600 hover:bg-purple-700' :
+                  theme === 'green' ? 'bg-green-600 hover:bg-green-700' :
+                  theme === 'red' ? 'bg-red-600 hover:bg-red-700' :
+                  'bg-yellow-600 hover:bg-yellow-700'
+                } text-white transition-colors duration-200`}
               >
                 Next
               </button>

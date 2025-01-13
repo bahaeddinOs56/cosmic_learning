@@ -23,6 +23,7 @@ const languages = [
 
 interface LanguageSelectionProps {
   onSelectLanguage: (language: string) => void;
+  theme: 'violet' | 'green' | 'red' | 'yellow';
 }
 
 const containerVariants = {
@@ -48,7 +49,7 @@ const itemVariants = {
   },
 }
 
-export default function LanguageSelection({ onSelectLanguage }: LanguageSelectionProps) {
+export default function LanguageSelection({ onSelectLanguage, theme }: LanguageSelectionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
@@ -106,7 +107,12 @@ export default function LanguageSelection({ onSelectLanguage }: LanguageSelectio
             <motion.button
               key={lang.name}
               onClick={() => onSelectLanguage(lang.name)}
-              className="flex-shrink-0 w-40 h-40 p-4 bg-white/10 rounded-lg hover:bg-white/20 transition-colors duration-300 flex flex-col items-center justify-center space-y-2"
+              className={`flex-shrink-0 w-40 h-40 p-4 rounded-lg transition-colors duration-300 flex flex-col items-center justify-center space-y-2 ${
+                theme === 'violet' ? 'bg-purple-800/30 hover:bg-purple-700/40' :
+                theme === 'green' ? 'bg-green-800/30 hover:bg-green-700/40' :
+                theme === 'red' ? 'bg-red-800/30 hover:bg-red-700/40' :
+                'bg-yellow-800/30 hover:bg-yellow-700/40'
+              }`}
               variants={itemVariants}
               whileHover={{ 
                 scale: 1.05, 
@@ -137,7 +143,12 @@ export default function LanguageSelection({ onSelectLanguage }: LanguageSelectio
         {canScrollLeft && (
           <button 
             onClick={() => scroll('left')}
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
+            className={`absolute left-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full ${
+              theme === 'violet' ? 'bg-purple-800/50' :
+              theme === 'green' ? 'bg-green-800/50' :
+              theme === 'red' ? 'bg-red-800/50' :
+              'bg-yellow-800/50'
+            } text-white`}
             aria-label="Scroll left"
           >
             ◀
@@ -146,7 +157,12 @@ export default function LanguageSelection({ onSelectLanguage }: LanguageSelectio
         {canScrollRight && (
           <button 
             onClick={() => scroll('right')}
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full"
+            className={`absolute right-0 top-1/2 transform -translate-y-1/2 p-2 rounded-full ${
+              theme === 'violet' ? 'bg-purple-800/50' :
+              theme === 'green' ? 'bg-green-800/50' :
+              theme === 'red' ? 'bg-red-800/50' :
+              'bg-yellow-800/50'
+            } text-white`}
             aria-label="Scroll right"
           >
             ▶

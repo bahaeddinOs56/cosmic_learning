@@ -1,15 +1,13 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import LanguageSelection from './components/LanguageSelection'
-import SkillAssessment from './components/SkillAssessment'
-import LearningPathSelection from './components/LearningPathSelection'
-import AIChatbot from './components/AIChatbot'
-import { getUserProgress, updateUserProgress } from '../actions/user-progress'
-import { Journey } from '@prisma/client'
+import { motion, AnimatePresence } from 'framer-motion'
+import LanguageSelection from '@/app/launch/components/LanguageSelection'
+import SkillAssessment from '@/app/launch/components/SkillAssessment'
+import LearningPathSelection from '@/app/launch/components/LearningPathSelection'
+import AIChatbot from '@/app/launch/components/AIChatbot'
 
-const sections = ['Welcome', 'Language', 'Skill', 'Path'] as const
+const sections = ['Welcome', 'Language', 'Skill', 'Path']
 
 interface ProgressIndicatorProps {
   currentStep: number;
@@ -18,16 +16,8 @@ interface ProgressIndicatorProps {
 
 export default function LaunchJourney() {
   const [currentSection, setCurrentSection] = useState(0)
-  const [userProgress, setUserProgress] = useState<Journey | null>(null)
-
-  useEffect(() => {
-    const fetchUserProgress = async () => {
-      // TODO: Replace 'placeholder-user-id' with actual user ID from authentication
-      const progress = await getUserProgress('placeholder-user-id')
-      setUserProgress(progress)
-    }
-    fetchUserProgress()
-  }, [])
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null)
+  const [skillLevel, setSkillLevel] = useState<string | null>(null)
 
   const nextSection = () => {
     if (currentSection < sections.length - 1) {
@@ -41,24 +31,30 @@ export default function LaunchJourney() {
     }
   }
 
-  const handleUpdateProgress = async (data: Partial<Journey>) => {
-    if (!userProgress) return
-    // TODO: Replace 'placeholder-user-id' with actual user ID from authentication
-    const updatedProgress = await updateUserProgress(userProgress.userId, data)
-    setUserProgress(updatedProgress)
-    nextSection()
+  const handleLanguageSelection = (language: string) => {
+    setSelectedLanguage(language)
+    setTimeout(() => {
+      nextSection()
+    }, 800)
+  }
+
+  const handleSkillAssessment = (skill: string) => {
+    setSkillLevel(skill)
+    setTimeout(() => {
+      setCurrentSection(3) // Skip to Learning Path Selection
+    }, 800)
   }
 
   const renderSection = () => {
-    switch (sections[currentSection]) {
-      case 'Welcome':
+    switch (currentSection) {
+      case 0:
         return <WelcomeSection />;
-      case 'Language':
-        return <LanguageSelection onSelect={(language) => handleUpdateProgress({ language })} />;
-      case 'Skill':
-        return <SkillAssessment onComplete={(skillLevel) => handleUpdateProgress({ skillLevel })} />;
-      case 'Path':
-        return <LearningPathSelection onSelect={(learningPath) => handleUpdateProgress({ learningPath })} />;
+      case 1:
+        return <LanguageSelection onSelectLanguage={handleLanguageSelection} />;
+      case 2:
+        return <SkillAssessment onComplete={handleSkillAssessment} />;
+      case 3:
+        return <LearningPathSelection language={selectedLanguage} skillLevel={skillLevel} />;
       default:
         return null;
     }
@@ -80,16 +76,18 @@ export default function LaunchJourney() {
         >
           <ProgressIndicator currentStep={currentSection} totalSteps={sections.length} />
           
-          <motion.div 
-            key={currentSection}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5 }}
-            className="mt-8 bg-white/10 backdrop-blur-md rounded-lg p-8 shadow-lg"
-          >
-            {renderSection()}
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div 
+              key={currentSection}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+              className="mt-8 bg-white/10 backdrop-blur-md rounded-lg p-8 shadow-lg"
+            >
+              {renderSection()}
+            </motion.div>
+          </AnimatePresence>
 
           <div className="mt-8 flex justify-between">
             <button
@@ -99,13 +97,15 @@ export default function LaunchJourney() {
             >
               Back
             </button>
-            <button
-              onClick={nextSection}
-              disabled={currentSection === sections.length - 1}
-              className="px-6 py-2 bg-blue-600 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Next
-            </button>
+            {currentSection !== 2 && ( // Hide "Next" button during Skill Assessment
+              <button
+                onClick={nextSection}
+                disabled={currentSection === sections.length - 1}
+                className="px-6 py-2 bg-blue-600 text-white rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+            )}
           </div>
         </motion.div>
       </div>
@@ -116,13 +116,7 @@ export default function LaunchJourney() {
 }
 
 function StarField() {
-  const [stars, setStars] = useState<Array<{
-    top: string;
-    left: string;
-    width: string;
-    height: string;
-    animationDuration: string;
-  }>>([])
+  const [stars, setStars] = useState<Array<{ top: string; left: string; width: string; height: string; animationDuration: string }>>([]);
 
   useEffect(() => {
     const generatedStars = [...Array(100)].map(() => ({
@@ -131,9 +125,9 @@ function StarField() {
       width: `${Math.random() * 2 + 1}px`,
       height: `${Math.random() * 2 + 1}px`,
       animationDuration: `${Math.random() * 5 + 5}s`,
-    }))
-    setStars(generatedStars)
-  }, [])
+    }));
+    setStars(generatedStars);
+  }, []);
 
   return (
     <div className="absolute inset-0">
@@ -151,7 +145,7 @@ function StarField() {
         />
       ))}
     </div>
-  )
+  );
 }
 
 function ProgressIndicator({ currentStep, totalSteps }: ProgressIndicatorProps) {

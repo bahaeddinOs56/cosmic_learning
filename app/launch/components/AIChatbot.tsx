@@ -3,22 +3,6 @@ import { motion } from 'framer-motion'
 
 export default function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([])
-  const [inputText, setInputText] = useState('')
-
-  const handleSendMessage = () => {
-    if (inputText.trim() === '') return
-
-    // Add user message
-    setMessages(prev => [...prev, { text: inputText, isUser: true }])
-
-    // Simulate AI response (replace with actual AI integration later)
-    setTimeout(() => {
-      setMessages(prev => [...prev, { text: "I'm an AI assistant. How can I help you with your coding journey?", isUser: false }])
-    }, 1000)
-
-    setInputText('')
-  }
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -43,29 +27,12 @@ export default function AIChatbot() {
         >
           <div className="p-4">
             <h3 className="font-bold mb-2">AI Assistant</h3>
-            <div className="h-60 overflow-y-auto mb-4 space-y-2">
-              {messages.map((msg, index) => (
-                <div key={index} className={`p-2 rounded-lg ${msg.isUser ? 'bg-blue-100 ml-auto' : 'bg-gray-100'}`}>
-                  {msg.text}
-                </div>
-              ))}
-            </div>
-            <div className="flex">
-              <input
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="Type your question..."
-                className="flex-grow p-2 border rounded-l"
-                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              />
-              <button
-                onClick={handleSendMessage}
-                className="bg-blue-600 text-white p-2 rounded-r"
-              >
-                Send
-              </button>
-            </div>
+            <p className="text-gray-600 mb-4">How can I help you with your coding journey?</p>
+            <input
+              type="text"
+              placeholder="Type your question..."
+              className="w-full p-2 border rounded"
+            />
           </div>
         </motion.div>
       )}

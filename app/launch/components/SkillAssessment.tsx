@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
+'use client'
 
-interface SkillAssessmentProps {
-  onComplete: (skillLevel: string) => void;
-}
+import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const questions = [
   {
@@ -20,27 +18,44 @@ const questions = [
   }
 ]
 
+interface SkillAssessmentProps {
+  onComplete: (skillLevel: string) => void;
+}
+
 export default function SkillAssessment({ onComplete }: SkillAssessmentProps) {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [answers, setAnswers] = useState<string[]>([])
+  const [selectedOption, setSelectedOption] = useState<string | null>(null)
+  const [isCompleted, setIsCompleted] = useState(false)
+
+  useEffect(() => {
+    if (isCompleted) {
+      const skillLevel = determineSkillLevel(answers)
+      setTimeout(() => {
+        onComplete(skillLevel)
+      }, 1000) // Delay to show completion message
+    }
+  }, [isCompleted, answers, onComplete])
 
   const handleAnswer = (answer: string) => {
-    const newAnswers = [...answers, answer]
-    setAnswers(newAnswers)
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
-    } else {
-      // Determine skill level based on answers
-      const skillLevel = determineSkillLevel(newAnswers)
-      onComplete(skillLevel)
-    }
+    setSelectedOption(answer)
+    
+    setTimeout(() => {
+      const newAnswers = [...answers, answer]
+      setAnswers(newAnswers)
+      setSelectedOption(null)
+
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(currentQuestion + 1)
+      } else {
+        setIsCompleted(true)
+      }
+    }, 500) // Delay for animation
   }
 
   const determineSkillLevel = (answers: string[]): string => {
-    // This is a simple algorithm and can be made more sophisticated
-    const score = answers.reduce((total, answer) => {
-      const index = questions[total].options.indexOf(answer)
-      return total + index
+    const score = answers.reduce((total, answer, index) => {
+      return total + questions[index].options.indexOf(answer)
     }, 0)
 
     if (score <= 2) return "Beginner"
@@ -54,29 +69,56 @@ export default function SkillAssessment({ onComplete }: SkillAssessmentProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.5 }}
+      className="space-y-6"
     >
-      <h2 className="text-2xl font-bold mb-4">Skill Assessment</h2>
-      {currentQuestion < questions.length ? (
-        <div>
-          <p className="mb-4">{questions[currentQuestion].question}</p>
-          <div className="space-y-2">
-            {questions[currentQuestion].options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswer(option)}
-                className="w-full p-2 text-left bg-white/20 rounded hover:bg-white/30 transition-colors"
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div>
-          <p className="mb-4">Thank you for completing the assessment!</p>
-          <p>We&apos;ll use this information to customize your learning experience.</p>
-        </div>
-      )}
+      <h2 className="text-3xl font-bold mb-4 text-center">Skill Assessment</h2>
+      <AnimatePresence mode="wait">
+        {!isCompleted ? (
+          <motion.div
+            key={currentQuestion}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.3 }}
+          >
+            <p className="mb-4 text-xl">{questions[currentQuestion].question}</p>
+            <div className="space-y-3">
+              {questions[currentQuestion].options.map((option, index) => (
+                <motion.button
+                  key={index}
+                  onClick={() => handleAnswer(option)}
+                  className={`w-full p-3 text-left rounded-lg transition-colors ${
+                    selectedOption === option
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-white/20 hover:bg-white/30'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  animate={selectedOption === option ? { scale: [1, 1.05, 1] } : {}}
+                  transition={{ duration: 0.2 }}
+                >
+                  {option}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <p className="text-xl mb-4">Thank you for completing the assessment!</p>
+            <p className="text-lg">We're calculating your personalized learning path...</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <motion.div 
+        className="h-2 bg-blue-200 rounded-full overflow-hidden"
+        initial={{ width: 0 }}
+        animate={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
+        transition={{ duration: 0.5 }}
+      />
     </motion.div>
   )
 }

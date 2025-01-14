@@ -15,53 +15,144 @@ export const GalaxyOrbThemeSelector: React.FC = () => {
     setTheme(themes[nextIndex])
   }
 
+  const getThemeColors = () => {
+    switch (theme) {
+      case 'violet':
+        return {
+          primary: 'rgba(255, 255, 255, 0.9)',
+          accent: 'rgba(139, 92, 246, 1)',
+          glow: 'rgba(139, 92, 246, 0.5)'
+        }
+      case 'green':
+        return {
+          primary: 'rgba(255, 255, 255, 0.9)',
+          accent: 'rgba(52, 211, 153, 1)',
+          glow: 'rgba(52, 211, 153, 0.5)'
+        }
+      case 'red':
+        return {
+          primary: 'rgba(255, 255, 255, 0.9)',
+          accent: 'rgba(248, 113, 113, 1)',
+          glow: 'rgba(248, 113, 113, 0.5)'
+        }
+      case 'yellow':
+        return {
+          primary: 'rgba(255, 255, 255, 0.9)',
+          accent: 'rgba(251, 191, 36, 1)',
+          glow: 'rgba(251, 191, 36, 0.5)'
+        }
+      default:
+        return {
+          primary: 'rgba(255, 255, 255, 0.9)',
+          accent: 'rgba(139, 92, 246, 1)',
+          glow: 'rgba(139, 92, 246, 0.5)'
+        }
+    }
+  }
+
+  const colors = getThemeColors()
+
   return (
     <motion.button
-      className="fixed top-4 right-4 z-50 w-12 h-12 rounded-full overflow-hidden shadow-lg"
+      className="fixed top-4 right-4 z-50 w-16 h-16 flex items-center justify-center"
       onClick={handleClick}
-      whileHover={{ scale: 1.1 }}
+      whileHover={{ scale: 1.1, y: -5 }}
       whileTap={{ scale: 0.9 }}
+      style={{ 
+        filter: `drop-shadow(0 0 10px ${colors.glow}) drop-shadow(0 0 20px ${colors.glow})`
+      }}
     >
-      <div className={`w-full h-full relative ${getGalaxyClass(theme)}`} style={{
-  background: `radial-gradient(circle, ${getGalaxyColor(theme)} 0%, transparent 70%)`,
-}}>
-        <div className="absolute inset-0 bg-[url('/placeholder.svg?height=100&width=100')] bg-repeat opacity-50 animate-twinkle"></div>
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent to-black/50"></div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-        </div>
-      </div>
+      <motion.div
+        className="relative w-full h-full"
+        animate={{
+          rotate: [0, 360],
+        }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+      >
+        <svg
+          viewBox="0 0 800 800"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-full h-full"
+        >
+          {/* Background halo */}
+          <motion.circle
+            cx="400"
+            cy="400"
+            r="250"
+            fill={colors.glow}
+            fillOpacity="0.2"
+            animate={{
+              r: [250, 260, 250],
+              fillOpacity: [0.2, 0.3, 0.2]
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          
+          {/* UFO body */}
+          <motion.path
+            d="M400 200 L600 500 L200 500 Z"
+            fill={colors.primary}
+            stroke={colors.accent}
+            strokeWidth="4"
+          />
+          
+          {/* UFO top */}
+          <motion.ellipse
+            cx="400"
+            cy="300"
+            rx="100"
+            ry="50"
+            fill={colors.primary}
+            stroke={colors.accent}
+            strokeWidth="4"
+          />
+          
+          {/* UFO windows */}
+          <motion.circle
+            cx="350"
+            cy="300"
+            r="15"
+            fill={colors.accent}
+          />
+          <motion.circle
+            cx="400"
+            cy="300"
+            r="15"
+            fill={colors.accent}
+          />
+          <motion.circle
+            cx="450"
+            cy="300"
+            r="15"
+            fill={colors.accent}
+          />
+          
+          {/* Beam effect */}
+          <motion.path
+            d="M300 500 L500 500 L450 600 L350 600 Z"
+            fill={colors.accent}
+            fillOpacity="0.4"
+            animate={{
+              fillOpacity: [0.4, 0.6, 0.4],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+        </svg>
+      </motion.div>
     </motion.button>
   )
-}
-
-function getGalaxyClass(theme: string) {
-  switch (theme) {
-    case 'violet':
-      return 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 animate-galaxy-spin'
-    case 'green':
-      return 'bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 animate-galaxy-spin'
-    case 'red':
-      return 'bg-gradient-to-r from-red-500 via-rose-500 to-orange-500 animate-galaxy-spin'
-    case 'yellow':
-      return 'bg-gradient-to-r from-yellow-500 via-amber-500 to-orange-500 animate-galaxy-spin'
-    default:
-      return 'bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 animate-galaxy-spin'
-  }
-}
-
-function getGalaxyColor(theme: string) {
-  switch (theme) {
-    case 'violet':
-      return 'rgba(139, 92, 246, 0.3)';
-    case 'green':
-      return 'rgba(52, 211, 153, 0.3)';
-    case 'red':
-      return 'rgba(248, 113, 113, 0.3)';
-    case 'yellow':
-      return 'rgba(251, 191, 36, 0.3)';
-    default:
-      return 'rgba(139, 92, 246, 0.3)';
-  }
 }
 

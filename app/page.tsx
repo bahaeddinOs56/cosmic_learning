@@ -14,9 +14,8 @@ export default function Home() {
         <Image
           src="/galaxim.jpg"
           alt="High-resolution cosmic galaxy background"
-          layout="fill"
-          objectFit="cover"
-          className="animate-pulse opacity-60 mix-blend-screen"
+          fill
+          className="animate-pulse opacity-60 mix-blend-screen object-cover"
           priority
           quality={100}
         />
